@@ -912,32 +912,12 @@ label.check {
   .shell {
     display: block;
   }
-  .sidebar {
-    position: relative;
-    height: auto;
-    padding: 18px;
-  }
-  .sidebar .eyebrow,
-  .sidebar-bottom {
-    display: none;
-  }
+  .desktop-sidebar { display: none; }
   .workspace form.top-signout {
     display: flex;
   }
   .winner-grid {
     grid-template-columns: 1fr;
-  }
-  .nav {
-    display: flex;
-    overflow-x: auto;
-  }
-  .nav a {
-    white-space: nowrap;
-    padding: 10px;
-    font-size: 12px;
-  }
-  .nav a svg {
-    display: none;
   }
   .topbar {
     height: auto;
@@ -960,3 +940,4 @@ label.check {
     display: none;
   }
 }
+

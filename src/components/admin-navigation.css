@@ -1,0 +1,129 @@
+.topbar-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.workspace .topbar button.mobile-menu-trigger[data-slot="button"] {
+  display: none;
+}
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgb(0 0 0 / 0.45);
+  opacity: 1;
+  transition: opacity 200ms ease;
+}
+.sheet-overlay[data-starting-style],
+.sheet-overlay[data-ending-style] {
+  opacity: 0;
+}
+.sheet-content.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 60;
+  width: min(320px, calc(100vw - 32px));
+  height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 64px 20px 28px;
+  outline: none;
+  transform: translateX(0);
+  transition: transform 200ms ease;
+}
+.sheet-content[data-starting-style],
+.sheet-content[data-ending-style] {
+  transform: translateX(-100%);
+}
+.drawer-close[data-slot="button"] {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--paper);
+}
+.mobile-sidebar .sidebar-bottom {
+  margin-top: auto;
+  padding-top: 22px;
+}
+.mobile-sidebar .nav {
+  margin-block: 16px 28px;
+}
+.mobile-sidebar .nav a {
+  min-height: 48px;
+}
+.mobile-sidebar .nav a:focus-visible,
+.mobile-sidebar .wordmark:focus-visible {
+  outline: 2px solid var(--lemon);
+  outline-offset: 2px;
+}
+@media (max-width: 720px) {
+  .workspace .topbar button.mobile-menu-trigger[data-slot="button"] {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    flex-shrink: 0;
+  }
+  .topbar-heading {
+    flex: 1;
+  }
+  .topbar-heading > .eyebrow {
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+  .topbar {
+    gap: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet-content.sidebar,
+  .sheet-overlay {
+    transition: none;
+  }
+}
+
+/* Own the responsive sidebar rules here so legacy global mobile rules cannot
+   turn desktop navigation back into a horizontal strip. */
+@media (max-width: 720px) {
+  .shell > .sidebar.desktop-sidebar {
+    display: none;
+  }
+  .sheet-content.sidebar.mobile-sidebar {
+    position: fixed;
+    height: 100dvh;
+  }
+  .mobile-sidebar .eyebrow {
+    display: block;
+  }
+  .mobile-sidebar .sidebar-bottom {
+    display: block;
+  }
+  .mobile-sidebar .nav {
+    display: grid;
+    overflow: visible;
+  }
+  .mobile-sidebar .nav a {
+    padding: 12px;
+    font-size: 14px;
+    white-space: normal;
+  }
+  .mobile-sidebar .nav a svg {
+    display: block;
+    flex-shrink: 0;
+  }
+}
+
+.workspace .topbar button.mobile-menu-trigger[data-slot="button"] {
+  padding: 0;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink);
+}
+.workspace .topbar button.mobile-menu-trigger[data-slot="button"]:hover {
+  background: var(--sand);
+}

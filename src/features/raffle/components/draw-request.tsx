@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export function DrawRequest() {
-  const [id, setId] = useState("");
-  useEffect(() => setId(crypto.randomUUID()), []);
-  return <input type="hidden" name="request" value={id} />;
+  const input = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (input.current) input.current.value = crypto.randomUUID();
+  }, []);
+  return <input ref={input} type="hidden" name="request" defaultValue="" />;
 }

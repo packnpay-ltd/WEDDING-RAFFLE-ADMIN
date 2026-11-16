@@ -31,7 +31,7 @@ export async function verify(_: FormState, data: FormData): Promise<FormState> {
       path: "/",
       maxAge: result.expiresIn,
     });
-    revalidatePath("/");
+    revalidatePath("/", "layout");
     return { ok: true, message: "Signed in." };
   } catch (e) {
     return { message: (e as Error).message };
@@ -44,6 +44,6 @@ export async function logout() {
     await api("/auth/logout", {}, token);
   } finally {
     jar.delete("raffle_admin");
-    revalidatePath("/");
+    revalidatePath("/", "layout");
   }
 }

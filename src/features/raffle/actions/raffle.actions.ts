@@ -46,7 +46,7 @@ export async function mutate(_: FormState, data: FormData): Promise<FormState> {
       };
     } else throw new Error("Unknown action");
     await api(path, body, token);
-    revalidatePath("/");
+    revalidatePath("/", "layout");
     return {
       ok: true,
       message:

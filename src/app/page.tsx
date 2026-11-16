@@ -9,7 +9,7 @@ export default function Page() {
         </main>
       }
     >
-      <AdminPage />
+      <AdminPage section="overview" />
     </Suspense>
   );
 }

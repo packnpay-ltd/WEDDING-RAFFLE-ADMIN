@@ -1,25 +1,53 @@
 "use client";
 import { useActionState, useEffect } from "react";
+import { ShieldCheck } from "lucide-react";
 import { login, verify } from "../actions/auth.actions";
 import { ActionForm } from "@/components/ui/action-form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
+
 export function Login() {
   const [state, submit, pending] = useActionState(login, { message: "" });
   useEffect(() => {
     if (state.message)
-      toast.add({ title: state.message, type: state.ok ? "success" : "error" });
+      toast.add({
+        title: state.message,
+        type: state.ok ? "success" : "error",
+      });
   }, [state]);
   return (
-    <main className="shell max-w-lg! pt-20!">
-      <p className="eyebrow mb-5">The wedding celebration · Admin</p>
-      <h1 className="text-5xl! mb-8">Welcome back.</h1>
-      <div className="panel">
+    <div className="auth">
+      <aside className="auth-brand">
+        <p className="wordmark">
+          The celebration
+          <small>Administration</small>
+        </p>
+        <div>
+          <span className="eyebrow">The wedding celebration</span>
+          <h1>
+            The evening,
+            <br />
+            in your care.
+          </h1>
+          <p>
+            Entries, prizes, and the live draw. Quiet tools for the people
+            running the celebration.
+          </p>
+        </div>
+        <div className="auth-footer">
+          <span className="mono">With a little help from Osusu</span>
+          <ShieldCheck size={18} />
+        </div>
+      </aside>
+      <main className="auth-main">
+        <span className="eyebrow">Staff access only</span>
         {state.challengeId ? (
           <>
-            <h2 className="mb-5">Check your email</h2>
-            <ActionForm action={verify} label="Verify & sign in">
+            <h2>Check your email.</h2>
+            <p className="intro">
+              Enter the six-digit code. It expires in ten minutes.
+            </p>
+            <ActionForm action={verify} label="Verify and sign in">
               <input
                 type="hidden"
                 name="challengeId"
@@ -36,46 +64,59 @@ export function Login() {
                   required
                 />
               </label>
-              <p className="text-sm">
-                Your code expires in 10 minutes. To request another, return to
-                sign-in after one minute.
+              <p>
+                To request another code, return to sign-in after one minute.
               </p>
             </ActionForm>
-            <Button
-              className="mt-4"
-              variant="ghost"
+            <button
+              className="text-button"
+              type="button"
               onClick={() => window.location.reload()}
             >
               Return to sign-in
-            </Button>
+            </button>
           </>
         ) : (
-          <form action={submit} className="space-y-5">
-            <label>
-              Email address
-              <Input
-                name="email"
-                type="email"
-                required
-                autoComplete="username"
-              />
-            </label>
-            <label>
-              Password
-              <Input
-                name="password"
-                type="password"
-                required
-                autoComplete="current-password"
-              />
-            </label>
-            <Button type="submit" disabled={pending}>
-              {pending ? "Sending code…" : "Continue securely"}
-            </Button>
-            <p role="status">{state.message}</p>
-          </form>
+          <>
+            <h2>Welcome back.</h2>
+            <p className="intro">
+              Sign in to look after the guest list and run the draw.
+            </p>
+            <form action={submit} className="stack">
+              <label>
+                Email address
+                <Input
+                  name="email"
+                  type="email"
+                  required
+                  autoComplete="username"
+                />
+              </label>
+              <label>
+                Password
+                <Input
+                  name="password"
+                  type="password"
+                  required
+                  autoComplete="current-password"
+                />
+              </label>
+              <button type="submit" data-slot="button" disabled={pending}>
+                {pending ? "Sending code…" : "Continue securely"}
+              </button>
+              <p role="status">{state.message}</p>
+            </form>
+          </>
         )}
-      </div>
-    </main>
+        <p className="auth-note">
+          <ShieldCheck
+            size={15}
+            style={{ verticalAlign: "middle", marginRight: 6 }}
+          />
+          Access is for authorised event staff. Sign-in is confirmed with a
+          one-time code.
+        </p>
+      </main>
+    </div>
   );
 }

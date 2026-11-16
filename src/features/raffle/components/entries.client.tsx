@@ -3,6 +3,21 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import type { Entry } from "../types";
+
+function when(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return (
+    new Intl.DateTimeFormat("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "UTC",
+    }).format(date) + " UTC"
+  );
+}
 export function Entries({ entries }: { entries: Entry[] }) {
   const [query, setQuery] = useState(""),
     [date, setDate] = useState("");
@@ -39,14 +54,17 @@ export function Entries({ entries }: { entries: Entry[] }) {
     URL.revokeObjectURL(url);
   }
   return (
-    <section className="panel">
-      <div className="flex flex-wrap justify-between gap-3 mb-5">
-        <h2>Guest entries</h2>
-        <Button variant="outline" onClick={download}>
+    <section className="panel" id="entries">
+      <div className="panel-head row between">
+        <div>
+          <span className="eyebrow">Guest list</span>
+          <h2>Guest entries.</h2>
+        </div>
+        <Button className="secondary" type="button" onClick={download}>
           Export CSV
         </Button>
       </div>
-      <div className="grid sm:grid-cols-2 gap-3 mb-5">
+      <div className="toolbar">
         <Input
           aria-label="Search entries"
           placeholder="Search name, ticket, phone or email"
@@ -59,41 +77,39 @@ export function Entries({ entries }: { entries: Entry[] }) {
           value={date}
           onChange={(e) => setDate(e.target.value)}
         />
+        <span className="mono">{rows.length} shown</span>
       </div>
-      <p className="text-sm mb-3">
-        {rows.length} entries · Latest first · Times in UTC
-      </p>
-      <div className="overflow-x-auto">
-        <table>
-          <thead>
-            <tr>
-              {["Ticket", "Guest", "Contact", "Note", "Submitted"].map((s) => (
-                <th key={s}>{s}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((e) => (
-              <tr key={e.id}>
-                <td>{e.ticket}</td>
-                <td>{e.name}</td>
-                <td>
-                  {e.email}
-                  <br />
-                  {e.phone}
-                </td>
-                <td className="min-w-40 whitespace-pre-wrap">
-                  {e.note || "—"}
-                </td>
-                <td className="whitespace-nowrap">{e.created}</td>
+      {rows.length ? (
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                {["Ticket", "Guest", "Contact", "Note", "Submitted"].map(
+                  (s) => (
+                    <th key={s}>{s}</th>
+                  ),
+                )}
               </tr>
-            ))}
-          </tbody>
-        </table>
-        {!rows.length && (
-          <p className="py-8 text-center">No entries match your filters.</p>
-        )}
-      </div>
+            </thead>
+            <tbody>
+              {rows.map((e) => (
+                <tr key={e.id}>
+                  <td className="mono">{e.ticket}</td>
+                  <td>{e.name}</td>
+                  <td>
+                    {e.email}
+                    <small>{e.phone}</small>
+                  </td>
+                  <td className="note">{e.note || "—"}</td>
+                  <td>{when(e.created)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className="empty">No entries match your filters.</p>
+      )}
     </section>
   );
 }

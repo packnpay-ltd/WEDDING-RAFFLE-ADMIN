@@ -1,50 +1,75 @@
 import Image from "next/image";
-import { randomUUID } from "node:crypto";
 import { ActionForm } from "@/components/ui/action-form";
-import { Button } from "@/components/ui/button";
+import { DrawRequest } from "./draw-request";
 import { Input } from "@/components/ui/input";
-import { logout } from "@/features/auth";
 import { mutate } from "../actions/raffle.actions";
 import { Entries } from "./entries.client";
+import { AdminShell } from "@/components/admin-shell";
 import type { DashboardData } from "../types";
+
+function when(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return (
+    new Intl.DateTimeFormat("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "UTC",
+    }).format(date) + " UTC"
+  );
+}
 export function Dashboard({ data }: { data: DashboardData }) {
   return (
-    <main className="shell">
-      <header className="flex justify-between items-center border-b pb-5">
-        <span className="eyebrow">The wedding celebration · Admin</span>
-        <form action={logout}>
-          <Button variant="outline" type="submit">
-            Sign out
-          </Button>
-        </form>
-      </header>
-      <section className="py-10">
-        <p className="eyebrow mb-3">A day to remember</p>
-        <h1 className="text-5xl!">The celebration, at a glance.</h1>
-        <div className="grid grid-cols-3 gap-3 mt-7">
-          {[
-            [data.entries.length, "Guest entries"],
-            [data.eligible, "Eligible tickets"],
-            [data.draws.length, "Prizes awarded"],
-          ].map(([n, label]) => (
-            <div className="panel" key={label}>
-              <p className="text-3xl mb-2">{n}</p>
-              <p className="text-sm">{label}</p>
-            </div>
-          ))}
+    <AdminShell
+      couple={data.settings.names}
+      registrationOpen={!!data.settings.registrationOpen}
+    >
+      <section className="section" id="overview">
+        <div className="page-heading">
+          <div>
+            <p className="eyebrow">A day to remember</p>
+            <h1>The celebration, at a glance.</h1>
+            <p>Guest entries, the live draw, and the prizes still to award.</p>
+          </div>
+        </div>
+        <div className="stats">
+          <div className="stat">
+            <span className="eyebrow">Guest entries</span>
+            <span className="number">{data.entries.length}</span>
+            <small>People on the list</small>
+          </div>
+          <div className="stat">
+            <span className="eyebrow">Eligible tickets</span>
+            <span className="number">{data.eligible}</span>
+            <small>Each ticket has an equal chance</small>
+          </div>
+          <div className="stat">
+            <span className="eyebrow">Prizes awarded</span>
+            <span className="number">{data.draws.length}</span>
+            <small>Saved before they are revealed</small>
+          </div>
         </div>
       </section>
-      <Entries entries={data.entries} />
-      <div className="grid gap-6 md:grid-cols-2 my-6">
+      <div className="section">
+        <Entries entries={data.entries} />
+      </div>
+      <div className="grid-2 section" id="draw">
         <section className="panel">
-          <h2 className="mb-5">Run the live draw</h2>
-          <p className="text-sm mb-5">
+          <div className="panel-head">
+            <span className="eyebrow">Live draw</span>
+            <h2>Run the live draw.</h2>
+          </div>
+          <div className="panel-body">
+          <p className="lede">
             {data.eligible} eligible tickets. Each ticket has an equal chance. A
             winner is saved before being revealed.
           </p>
           <ActionForm action={mutate} label="Start draw">
             <input type="hidden" name="kind" value="draw" />
-            <input type="hidden" name="request" value={randomUUID()} />
+            <DrawRequest />
             <label>
               Select prize
               <select name="prizeId" required defaultValue="">
@@ -69,7 +94,7 @@ export function Dashboard({ data }: { data: DashboardData }) {
           {data.draws
             .filter((d) => !d.revealed)
             .map((d) => (
-              <div className="mt-6 rounded-xl bg-[#f8f0dd] p-5" key={d.id}>
+              <div className="saved" key={d.id}>
                 <p className="mb-4">
                   {d.prizeName}: winner selected and securely saved.
                 </p>
@@ -79,9 +104,14 @@ export function Dashboard({ data }: { data: DashboardData }) {
                 </ActionForm>
               </div>
             ))}
+          </div>
         </section>
         <section className="panel">
-          <h2 className="mb-5">Add a prize</h2>
+          <div className="panel-head">
+            <span className="eyebrow">Prize catalogue</span>
+            <h2>Add a prize.</h2>
+          </div>
+          <div className="panel-body">
           <ActionForm action={mutate} label="Add prize">
             <input type="hidden" name="kind" value="prize" />
             <label>
@@ -99,9 +129,7 @@ export function Dashboard({ data }: { data: DashboardData }) {
                 type="file"
                 accept="image/png,image/jpeg,image/webp"
               />
-              <span className="text-xs font-normal">
-                PNG, JPEG or WebP, up to 700 KB
-              </span>
+              <span className="hint">PNG, JPEG or WebP, up to 700 KB</span>
             </label>
             <label>
               Image URL
@@ -118,18 +146,22 @@ export function Dashboard({ data }: { data: DashboardData }) {
                 required
               />
             </label>
-            <label>
+            <label className="check">
               <input type="checkbox" name="published" defaultChecked /> Publish
               for draw
             </label>
           </ActionForm>
+          </div>
         </section>
       </div>
-      <section className="panel mb-6">
-        <h2 className="mb-5">Prizes</h2>
-        <div className="grid gap-4 md:grid-cols-2">
+      <section className="panel section" id="prizes">
+        <div className="panel-head">
+          <span className="eyebrow">Catalogue</span>
+          <h2>Prizes.</h2>
+        </div>
+        <div className="prize-list">
           {data.prizes.map((p) => (
-            <details className="border rounded-lg p-4" key={p.id}>
+            <details className="prize" key={p.id}>
               <summary>
                 {p.name} · {p.quantity} available ·{" "}
                 {p.published ? "Published" : "Withdrawn"}
@@ -141,10 +173,10 @@ export function Dashboard({ data }: { data: DashboardData }) {
                   width={240}
                   height={160}
                   unoptimized
-                  className="my-4 rounded-lg object-contain"
+                  className="prize-image"
                 />
               )}
-              <p className="my-3 text-sm">
+              <p className="lede">
                 Prizes can be edited before their first draw.
               </p>
               <ActionForm action={mutate} label="Update prize">
@@ -176,7 +208,7 @@ export function Dashboard({ data }: { data: DashboardData }) {
                     defaultValue={p.quantity}
                   />
                 </label>
-                <label>
+                <label className="check">
                   <input
                     name="published"
                     type="checkbox"
@@ -189,16 +221,20 @@ export function Dashboard({ data }: { data: DashboardData }) {
           ))}
         </div>
       </section>
-      <section className="panel mb-6">
-        <h2 className="mb-5">Winners & collection</h2>
-        <div className="grid gap-4 md:grid-cols-3">
+      <section className="panel section" id="winners">
+        <div className="panel-head">
+          <span className="eyebrow">Collection</span>
+          <h2>Winners and collection.</h2>
+        </div>
+        <div className="panel-body">
+        <div className="winner-grid">
           {data.draws
             .filter((d) => d.revealed)
             .map((d) => (
-              <div className="border rounded-xl p-5" key={d.id}>
+              <div className="winner" key={d.id}>
                 <p className="eyebrow">{d.prizeName}</p>
-                <h3 className="text-2xl mt-3">{d.name}</h3>
-                <p className="mb-4">R-{String(d.entryId).padStart(4, "0")}</p>
+                <h3>{d.name}</h3>
+                <p className="mono">R-{String(d.entryId).padStart(4, "0")}</p>
                 {d.collected ? (
                   <p>✓ Prize collected</p>
                 ) : (
@@ -207,15 +243,20 @@ export function Dashboard({ data }: { data: DashboardData }) {
                     <input type="hidden" name="id" value={d.id} />
                   </ActionForm>
                 )}
-                <p className="text-xs mt-4">{d.created} UTC</p>
+                <p className="quiet">{when(d.created)}</p>
               </div>
             ))}
         </div>
-        {!data.draws.length && <p>No draws yet.</p>}
+        {!data.draws.length && <p className="empty">No draws yet.</p>}
+        </div>
       </section>
-      <section className="panel mb-6">
-        <h2 className="mb-5">Wedding & raffle settings</h2>
-        <ActionForm action={mutate}>
+      <section className="panel section" id="settings">
+        <div className="panel-head">
+          <span className="eyebrow">The evening</span>
+          <h2>Wedding and raffle settings.</h2>
+        </div>
+        <div className="panel-body">
+        <ActionForm action={mutate} label="Save settings">
           <input type="hidden" name="kind" value="settings" />
           <label>
             Couple’s names
@@ -241,7 +282,7 @@ export function Dashboard({ data }: { data: DashboardData }) {
               <option value="none">Allow repeat entries</option>
             </select>
           </label>
-          <label>
+          <label className="check">
             <input
               type="checkbox"
               name="registrationOpen"
@@ -249,7 +290,7 @@ export function Dashboard({ data }: { data: DashboardData }) {
             />{" "}
             Registration open
           </label>
-          <label>
+          <label className="check">
             <input
               type="checkbox"
               name="excludeWinners"
@@ -258,17 +299,22 @@ export function Dashboard({ data }: { data: DashboardData }) {
             Exclude previous winners from future draws
           </label>
         </ActionForm>
+        </div>
       </section>
-      <details className="panel">
-        <summary>Administrative audit history</summary>
-        <ul className="mt-4 text-sm space-y-3">
+      <section className="panel section" id="audit">
+        <div className="panel-head">
+          <span className="eyebrow">Record</span>
+          <h2>Administrative audit history.</h2>
+        </div>
+        <ul className="audit-list">
           {data.audit.map((a) => (
             <li key={a.id}>
-              {a.created} UTC · {a.action} · {a.subject}
+              {when(a.created)} · {a.action} · {a.subject}
             </li>
           ))}
+          {!data.audit.length && <li>No administrative actions yet.</li>}
         </ul>
-      </details>
-    </main>
+      </section>
+    </AdminShell>
   );
 }

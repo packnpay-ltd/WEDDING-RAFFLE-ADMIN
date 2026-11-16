@@ -4,8 +4,8 @@ export default function Page() {
   return (
     <Suspense
       fallback={
-        <main className="shell">
-          <p>Loading the celebration…</p>
+        <main className="gate">
+          <p className="mono">Opening the desk…</p>
         </main>
       }
     >

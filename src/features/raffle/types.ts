@@ -39,3 +39,6 @@ export type DashboardData = {
   };
   audit: { id: number; action: string; subject: string; created: string }[];
 };
+
+export type AdminSection =
+  "overview" | "entries" | "draw" | "prizes" | "winners" | "settings" | "audit";

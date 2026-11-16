@@ -1,4 +1,5 @@
 "use server";
+import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { api } from "@/lib/api";
@@ -32,18 +33,21 @@ export async function verify(_: FormState, data: FormData): Promise<FormState> {
       maxAge: result.expiresIn,
     });
     revalidatePath("/", "layout");
-    return { ok: true, message: "Signed in." };
   } catch (e) {
     return { message: (e as Error).message };
   }
+  redirect("/");
 }
 export async function logout() {
   const jar = await cookies(),
     token = jar.get("raffle_admin")?.value;
   try {
     await api("/auth/logout", {}, token);
+  } catch {
+    // Local sign-out remains available if the backend session already expired.
   } finally {
     jar.delete("raffle_admin");
     revalidatePath("/", "layout");
   }
+  redirect("/login");
 }

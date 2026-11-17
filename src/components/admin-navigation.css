@@ -127,3 +127,6 @@
 .workspace .topbar button.mobile-menu-trigger[data-slot="button"]:hover {
   background: var(--sand);
 }
+
+.sidebar { overflow-y:auto; }
+.sidebar .nav a { min-height:44px; }

@@ -23,6 +23,8 @@ import {
   Trophy,
   Users,
   Menu,
+  GlassWater,
+  ClipboardList,
   X,
 } from "lucide-react";
 import { logout } from "@/features/auth";
@@ -33,6 +35,8 @@ const links = [
   { href: "/draw", label: "Live draw", icon: Gift },
   { href: "/prizes", label: "Prizes", icon: Ticket },
   { href: "/winners", label: "Winners", icon: Trophy },
+  { href: "/cocktails", label: "Cocktail menu", icon: GlassWater },
+  { href: "/cocktail-orders", label: "Cocktail orders", icon: ClipboardList },
   { href: "/settings", label: "Settings", icon: Settings2 },
   { href: "/audit", label: "Audit history", icon: FileText },
 ];

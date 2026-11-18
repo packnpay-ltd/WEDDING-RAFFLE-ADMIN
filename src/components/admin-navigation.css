@@ -56,7 +56,7 @@
 }
 .mobile-sidebar .nav a:focus-visible,
 .mobile-sidebar .wordmark:focus-visible {
-  outline: 2px solid var(--lemon);
+  outline: 2px solid var(--peach);
   outline-offset: 2px;
 }
 @media (max-width: 720px) {

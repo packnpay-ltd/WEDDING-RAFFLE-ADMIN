@@ -136,23 +136,23 @@
   --card-foreground: #34372e;
   --popover: #fffefa;
   --popover-foreground: #34372e;
-  --primary: #b7d86b;
-  --primary-foreground: #26321b;
+  --primary: #5c1824;
+  --primary-foreground: #fffdf8;
   --secondary: #f6c6b7;
   --secondary-foreground: #34372e;
   --muted: #f8f0dd;
   --muted-foreground: #5e5a50;
   --border: #e3d9c4;
   --input: #d9d0bc;
-  --ring: #93ad53;
+  --ring: #5c1824;
   --paper: #faf8f6;
   --ink: #34372e;
-  --night: #2c2f28;
-  --action: #50642c;
-  --lemon: #b7d86b;
+  --night: #2c1a1e;
+  --action: #5c1824;
+  --lemon: #5c1824;
   --peach: #f6c6b7;
   --gold: #c8a96b;
-  --sand: #edf3df;
+  --sand: #f4e8e6;
   --line: #e3d9c4;
   --quiet: #5e5a50;
   --font-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -286,7 +286,7 @@ label select {
   background: repeating-linear-gradient(
     135deg,
     transparent 0 8px,
-    #b7d86b33 8px 10px
+    #f6c6b744 8px 10px
   );
   border-radius: 50%;
   pointer-events: none;
@@ -413,7 +413,7 @@ label select {
 
 .nav a.active,
 .nav a:hover {
-  border-left-color: var(--lemon);
+  border-left-color: var(--peach);
   background: #ffffff0c;
   color: var(--paper);
 }
@@ -425,7 +425,7 @@ label select {
 }
 
 .sidebar-bottom .text-button {
-  color: var(--lemon);
+  color: var(--peach);
   margin-top: 18px;
 }
 
@@ -555,7 +555,7 @@ label select {
 }
 
 .stat:first-child .number {
-  color: var(--lemon);
+  color: var(--peach);
 }
 
 .stat small {
@@ -739,9 +739,9 @@ label.check {
   height: auto;
   padding: 11px 18px;
   border-radius: 0;
-  border: 1px solid #26321b;
+  border: 1px solid #5c1824;
   background: var(--lemon);
-  color: #26321b;
+  color: #fffdf8;
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0;
@@ -750,7 +750,7 @@ label.check {
 
 .auth-main button[data-slot="button"]:hover,
 .workspace button[data-slot="button"]:hover {
-  background: #c6e286;
+  background: #732433;
 }
 
 .workspace button[data-slot="button"].secondary {

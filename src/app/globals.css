@@ -130,7 +130,7 @@
 }
 
 :root {
-  --background: #fffdf8;
+  --background: #faf8f6;
   --foreground: #34372e;
   --card: #fffefa;
   --card-foreground: #34372e;
@@ -145,7 +145,7 @@
   --border: #e3d9c4;
   --input: #d9d0bc;
   --ring: #93ad53;
-  --paper: #fffdf8;
+  --paper: #faf8f6;
   --ink: #34372e;
   --night: #2c2f28;
   --action: #50642c;
